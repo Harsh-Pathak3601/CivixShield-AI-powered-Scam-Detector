@@ -24,7 +24,6 @@ export const VideoStack = ({ videos, onVideoClick }: VideoStackProps) => {
     setIndex((prev) => (prev - 1 + videos.length) % videos.length);
   }, [videos.length]);
 
-  // Handle keyboard navigation specific to stack view
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') handleNext();
@@ -64,16 +63,14 @@ export const VideoStack = ({ videos, onVideoClick }: VideoStackProps) => {
              const offset = i - index;
              let renderOffset = offset;
              
-             // Endless loop magic (showing prev/curr/next seamlessly)
              if (offset < -1) renderOffset += videos.length;
              if (offset > 1 && offset > videos.length - 2) renderOffset -= videos.length;
 
              const isVisible = Math.abs(renderOffset) <= 1;
-             if (!isVisible) return null; // Only keep 3 cards in the DOM at once
+             if (!isVisible) return null;
 
              const isCenter = renderOffset === 0;
 
-             // Dynamic visual properties based on depth
              const scale = isCenter ? 1 : 0.8;
              const x = renderOffset * 65 + "%";
              const z = isCenter ? 50 : -100;
@@ -107,7 +104,6 @@ export const VideoStack = ({ videos, onVideoClick }: VideoStackProps) => {
                    else if (renderOffset < 0) handlePrev();
                  }}
                >
-                 {/* Dark overlay for inactive cards */}
                  <div className="absolute inset-0 bg-black/70 z-10 pointer-events-none transition-opacity duration-300" style={{ opacity: isCenter ? 0 : 0.6 }} />
                  
                  <img 
@@ -124,7 +120,7 @@ export const VideoStack = ({ videos, onVideoClick }: VideoStackProps) => {
                       </div>
                       <div className="absolute bottom-0 w-full p-4 md:p-6 bg-gradient-to-t from-black via-black/90 to-transparent">
                           <h3 className="text-white font-bold text-lg md:text-xl uppercase tracking-wider line-clamp-1">{video.title}</h3>
-                          <p className="text-cyan-400 text-xs md:text-sm mt-1 line-clamp-2 md:line-clamp-2 leading-relaxed">{video.description}</p>
+                          <p className="text-cyan-400 text-xs md:text-sm mt-1 line-clamp-2 leading-relaxed">{video.description}</p>
                       </div>
                    </div>
                  )}
@@ -134,7 +130,6 @@ export const VideoStack = ({ videos, onVideoClick }: VideoStackProps) => {
         </AnimatePresence>
       </div>
 
-      {/* Progress Dots */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 pb-2 z-50">
         {videos.map((_, i) => (
           <div 

@@ -1,16 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/Chaat-Masala-Hack4Innovation-26/components/ui/button'
-import { Textarea } from '@/Chaat-Masala-Hack4Innovation-26/components/ui/textarea'
-import { Input } from '@/Chaat-Masala-Hack4Innovation-26/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Chaat-Masala-Hack4Innovation-26/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Chaat-Masala-Hack4Innovation-26/components/ui/tabs'
-import { Alert, AlertDescription } from '@/Chaat-Masala-Hack4Innovation-26/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Copy, Check, Image, Mic, Link as LinkIcon, MessageSquare, QrCode, Shield, ArrowRight } from 'lucide-react'
 import { toast } from 'sonner'
-import { useLanguage } from '@/Chaat-Masala-Hack4Innovation-26/lib/i18n/LanguageContext'
-import jsQR from 'jsqr'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import QrScanner from 'qr-scanner'
 
 interface AnalysisFormProps {
   onAnalyze: (content: string, type: string, mediaBase64?: string, mediaType?: string) => Promise<void>
@@ -26,6 +26,10 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
   const [audioFile, setAudioFile] = useState<File | null>(null)
   const [url, setUrl] = useState('')
   const [isRecording, setIsRecording] = useState(false)
+  const [qrFile, setQrFile] = useState<File | null>(null)
+  const [qrDecodedData, setQrDecodedData] = useState<string | null>(null)
+  const [qrDecoding, setQrDecoding] = useState(false)
+  const [qrError, setQrError] = useState<string | null>(null)
 
   const getBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -34,6 +38,25 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
       reader.onload = () => resolve((reader.result as string).split(',')[1]) // Get raw base64 data
       reader.onerror = error => reject(error)
     })
+  }
+
+  const handleQrUpload = async (file: File) => {
+    setQrFile(file)
+    setQrDecodedData(null)
+    setQrError(null)
+    setQrDecoding(true)
+    try {
+      // Use Nimiq's robust qr-scanner instead of older raw jsQR
+      const result = await QrScanner.scanImage(file, { returnDetailedScanResult: true })
+      if (result && result.data) {
+        setQrDecodedData(result.data)
+        toast.success('QR Code decoded locally!')
+      }
+    } catch (err) {
+      setQrError('Local decode failed. The AI will attempt to read the code manually during analysis.')
+    } finally {
+      setQrDecoding(false)
+    }
   }
 
   const handleAnalyze = async () => {
@@ -65,6 +88,16 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
       }
 
       if (!finalContent) finalContent = "Please transcribe and analyze this audio for any fraud, phishing, or scam indicators."
+    } else if (activeTab === 'qr' && qrFile) {
+      // Send the actual QR poster image to Gemini so it can read surrounding text/warnings
+      mediaBase64 = await getBase64(qrFile)
+      mediaMimeType = qrFile.type || 'image/png'
+      
+      if (qrDecodedData) {
+        finalContent = `[QR Code Scanned Data: ${qrDecodedData}]\n\nPlease analyze this QR code destination and read any text on the surrounding poster image for signs of fraud.`
+      } else {
+        finalContent = `Please visually scan this image, extract the QR code URL from it, and analyze if the destination or the surrounding poster represents a scam.`
+      }
     } else if (!finalContent.trim()) {
       return // Require text if no media
     }
@@ -121,6 +154,10 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
               <TabsTrigger value="audio" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-3 sm:px-6 rounded-lg data-[state=active]:bg-transparent data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-1 sm:gap-2">
                 <Mic className="h-4 w-4 shrink-0" />
                 <span>Audio</span>
+              </TabsTrigger>
+              <TabsTrigger value="qr" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-3 sm:px-6 rounded-lg data-[state=active]:bg-transparent data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-1 sm:gap-2">
+                <QrCode className="h-4 w-4 shrink-0" />
+                <span>QR Code</span>
               </TabsTrigger>
             </TabsList>
 
@@ -220,6 +257,68 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
                 </label>
               </div>
             </TabsContent>
+
+            {/* QR Code Tab */}
+            <TabsContent value="qr" className="space-y-6 mt-0">
+              <div className="border border-dashed border-cyan-800/50 bg-[#05080a] p-10 text-center hover:border-cyan-500 transition-colors cursor-pointer group relative">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) handleQrUpload(e.target.files[0])
+                  }}
+                  className="hidden"
+                  id="qr-input"
+                  disabled={isLoading || qrDecoding}
+                />
+                <label htmlFor="qr-input" className="cursor-pointer block min-h-[140px] flex flex-col items-center justify-center">
+                  {!qrFile ? (
+                    <>
+                      <QrCode className="h-10 w-10 text-cyan-600 mx-auto mb-4 group-hover:text-cyan-400" />
+                      <p className="text-base text-gray-300">Click to upload QR Code image</p>
+                      <p className="text-sm text-cyan-800 mt-2">PNG, JPG — we'll extract the hidden URL/data</p>
+                    </>
+                  ) : (
+                    <div className="relative w-full max-w-[200px] aspect-square mx-auto border-2 border-cyan-500/50 rounded-md overflow-hidden bg-black/50">
+                      <img
+                        src={URL.createObjectURL(qrFile)}
+                        alt="QR preview"
+                        className="w-full h-full object-contain"
+                      />
+                      <div className="absolute inset-0 bg-cyan-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                        <span className="text-cyan-400 font-bold bg-black/60 px-3 py-1 rounded">Click to Change</span>
+                      </div>
+                    </div>
+                  )}
+                </label>
+              </div>
+
+              {qrDecoding && (
+                <div className="flex items-center gap-3 text-cyan-400 text-sm">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Decoding QR code...</span>
+                </div>
+              )}
+
+              {qrError && (
+                <div className="bg-red-950/30 border border-red-800/50 p-4 text-red-400 text-sm">
+                  &gt; {qrError}
+                </div>
+              )}
+
+              {qrDecodedData && (
+                <div className="space-y-3">
+                  <div className="bg-[#0d1117] border border-cyan-800/50 p-4">
+                    <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">Decoded QR Content:</p>
+                    <p className="text-sm text-gray-200 font-mono break-all bg-black/30 p-3 border border-gray-800 rounded">{qrDecodedData}</p>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <Shield className="w-3 h-3" />
+                    <span>Click &quot;Analyze&quot; below to check if this link/content is safe</span>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
           </Tabs>
 
           {/* Global Action Button */}
@@ -227,7 +326,7 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
             {/* Black cutout corners simulated with absolute positioned boxes matching bg */}
             <Button
               onClick={handleAnalyze}
-              disabled={(!content.trim() && !screenshotFile && !audioFile && !url) || isLoading}
+              disabled={(!content.trim() && !screenshotFile && !audioFile && !url && !qrFile) || isLoading}
               className="w-full relative h-14 sm:h-16 bg-[#9C941A] hover:bg-[#b0a720] text-black font-bold uppercase tracking-[0.2em] rounded-none border-b-4 border-red-700 disabled:opacity-50 disabled:cursor-not-allowed group overflow-hidden"
               size="lg"
             >

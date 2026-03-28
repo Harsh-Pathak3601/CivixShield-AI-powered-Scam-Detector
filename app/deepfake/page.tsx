@@ -333,16 +333,18 @@ export default function DeepfakeDetector() {
 
         {/* Info Cards Row (always visible at bottom) */}
         {!result && (
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mt-10 max-w-4xl mx-auto">
-  <div className="bg-[#050505] border-t-2 border-cyan-500 px-6 py-8 uppercase tracking-[0.2em] text-xs font-bold text-gray-500 flex flex-col justify-center items-center shadow-lg text-center">
-    IMAGES SUPPORTED
-  </div>
-  <div className="bg-[#050505] border-t-2 border-yellow-500 px-6 py-8 uppercase tracking-[0.2em] text-xs font-bold text-gray-500 flex flex-col justify-center items-center shadow-lg text-center">
-    VIDEO SUPPORTED
-  </div>
-</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-10">
+            <div className="bg-[#050505] border-t-2 border-cyan-500 px-6 py-4 uppercase tracking-[0.2em] text-xs font-bold text-gray-500 flex flex-col justify-center shadow-lg">
+              IMAGES SUPPORTED
+            </div>
+            <div className="bg-[#050505] border-t-2 border-yellow-500 px-6 py-4 uppercase tracking-[0.2em] text-xs font-bold text-gray-500 flex flex-col justify-center shadow-lg">
+              VIDEO SUPPORTED
+            </div>
+            <div className="bg-[#050505] border-t-2 border-red-500 px-6 py-4 uppercase tracking-[0.2em] text-xs font-bold text-gray-500 flex flex-col justify-center shadow-lg">
+              POWERED BY HIVE AI
+            </div>
+          </div>
         )}
-
       </div>
     </div>
   )

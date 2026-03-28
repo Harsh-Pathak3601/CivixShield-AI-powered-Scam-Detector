@@ -1,0 +1,12 @@
+﻿.next/dev/types/validator.ts(80,39): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/app/community/page.tsx' is not a module.
+.next/dev/types/validator.ts(98,39): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/app/deepfake/page.tsx' is not a module.
+.next/dev/types/validator.ts(107,39): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/app/emergency/page.tsx' is not a module.
+.next/dev/types/validator.ts(143,39): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/app/scan/page.tsx' is not a module.
+.next/dev/types/validator.ts(179,39): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/app/api/community/route.ts' is not a module.
+.next/types/validator.ts(80,39): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/app/community/page.tsx' is not a module.
+.next/types/validator.ts(98,39): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/app/deepfake/page.tsx' is not a module.
+.next/types/validator.ts(107,39): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/app/emergency/page.tsx' is not a module.
+.next/types/validator.ts(143,39): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/app/scan/page.tsx' is not a module.
+.next/types/validator.ts(179,39): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/app/api/community/route.ts' is not a module.
+components/shared/language-switcher.tsx(5,26): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/lib/i18n/translations.ts' is not a module.
+lib/i18n/LanguageContext.tsx(4,40): error TS2306: File 'C:/Users/patha/Downloads/civixShield-final/lib/i18n/translations.ts' is not a module.

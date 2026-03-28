@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// Extract YouTube ID from URL to get the thumbnail
 const getYouTubeId = (url: string) => {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
@@ -21,7 +20,6 @@ interface VideoCardProps {
 
 export const VideoCard = ({ video, onClick }: VideoCardProps) => {
   const videoId = getYouTubeId(video.videoUrl);
-  // Default to maxresdefault, fallback below if it 404s
   const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '/placeholder.jpg';
   const fallbackThumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '/placeholder.jpg';
   

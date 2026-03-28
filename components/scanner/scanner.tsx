@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { AnalysisForm } from '@/Chaat-Masala-Hack4Innovation-26/components/scanner/analysis-form'
-import { RiskIndicator } from '@/Chaat-Masala-Hack4Innovation-26/components/scanner/risk-indicator'
-import { AnalysisFindings } from '@/Chaat-Masala-Hack4Innovation-26/components/scanner/analysis-findings'
-import { useAuth } from '@/Chaat-Masala-Hack4Innovation-26/components/providers/auth-provider'
+import { AnalysisForm } from '@/components/scanner/analysis-form'
+import { RiskIndicator } from '@/components/scanner/risk-indicator'
+import { AnalysisFindings } from '@/components/scanner/analysis-findings'
+import { useAuth } from '@/components/providers/auth-provider'
 import { toast } from 'sonner'
-import { Button } from '@/Chaat-Masala-Hack4Innovation-26/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { Share2 } from 'lucide-react'
 
 export interface AnalysisResult {
@@ -21,6 +21,16 @@ export interface AnalysisResult {
   urls_found: number
   unsafe_urls: number
   url_threats: string[]
+  url_verdict?: {
+    url: string
+    domain: string
+    verdict: 'Legitimate' | 'Suspicious' | 'Phishing'
+    confidence: 'Low' | 'Medium' | 'High'
+    risk_score: number
+    reason: string
+    detected_issues: string[]
+    matched_brand?: string
+  }
 }
 
 interface ScannerProps {
@@ -119,6 +129,7 @@ export function Scanner({ onComplete }: ScannerProps) {
             scamPatterns={result.scam_patterns}
             recommendations={result.recommendations}
             urlThreats={result.url_threats}
+            urlVerdict={result.url_verdict}
           />
 
           {user ? (

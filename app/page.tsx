@@ -40,15 +40,6 @@ export default function Home() {
         {/* Terminal Hero Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-20">
           <div className="flex flex-col items-center text-center space-y-10 max-w-5xl mx-auto">
-
-            <div className="border border-cyan-500/50 bg-[#0a0f14] px-4 py-1.5 flex items-center gap-3 text-sm shadow-[0_0_15px_rgba(34,211,238,0.1)]">
-              <Sparkles className="h-4 w-4 text-cyan-400" />
-              <span className="text-gray-400 uppercase tracking-widest">SYSTEM INITIALIZED</span>
-              <Link href="/auth/sign-up" className="text-cyan-400 hover:underline uppercase tracking-widest font-bold">
-                Deploy Core Operations <ChevronRight className="h-3 w-3 inline" />
-              </Link>
-            </div>
-
             <div className="space-y-4 mb-4">
               <h1 className="text-6xl sm:text-7xl md:text-7xl font-black tracking-tighter text-gray-200 leading-[1] font-sans">
                 Your AI Guardian <br />
@@ -165,22 +156,48 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CTA Terminal */}
-        <section className="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-          <div className="relative bg-[#050505] border-2 border-cyan-500 p-12 md:p-20 text-center shadow-[0_0_40px_rgba(34,211,238,0.1)]">
-            <div className="relative z-10 space-y-8 flex flex-col items-center">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-[0.2em] uppercase text-white">
-                READY TO SECURE SYSTEM BOUNDARIES?
+        {/* WhatsApp Bot CTA */}
+        <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+          <div className="relative bg-[#050505] border-2 border-[#25D366] p-8 md:p-12 shadow-[0_0_40px_rgba(37,211,102,0.15)] flex flex-col md:flex-row items-center gap-10 md:gap-16">
+            {/* Terminal Corner Cutouts */}
+            <div className="absolute top-0 right-0 w-8 h-8 bg-[#0a0f14] border-b-2 border-l-2 border-[#25D366] transform translate-x-[2px] -translate-y-[2px]" style={{ clipPath: 'polygon(100% 0, 0 100%, 100% 100%)' }} />
+
+            {/* Decorative Nodes */}
+            <div className="absolute top-0 left-0 w-3 h-3 bg-[#25D366] -translate-x-[2px] -translate-y-[2px]" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#25D366] translate-x-[2px] translate-y-[2px]" />
+            <div className="absolute bottom-0 left-0 w-3 h-3 bg-[#25D366] -translate-x-[2px] translate-y-[2px]" />
+
+            <div className="shrink-0 w-24 h-24 sm:w-32 sm:h-32 bg-[#0a0f14] border-2 border-[#25D366] flex items-center justify-center relative p-6">
+              <div className="absolute top-0 right-0 w-2 h-2 bg-white" />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="#25D366" className="w-full h-full drop-shadow-[0_0_15px_rgba(37,211,102,0.8)]">
+                <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+              </svg>
+            </div>
+
+            <div className="flex-1 space-y-6 md:text-left text-center">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-[0.2em] uppercase text-white">
+                WHATSAPP <span className="text-[#25D366]">INTEGRATION</span>
               </h2>
-              <p className="text-sm md:text-base text-cyan-600/80 max-w-2xl mx-auto tracking-widest uppercase">
-                &gt; AUTHORIZATION REQUIRED TO INITIALIZE HISTORY PROTOCOLS AND ONGOING THREAT TRACKING.
+
+              <p className="text-sm md:text-base text-[#25D366] max-w-2xl tracking-widest uppercase md:border-l-2 md:border-[#25D366] md:pl-4 mx-auto md:mx-0 opacity-80 leading-relaxed font-mono">
+                &gt; DEPLOY SCAM CHECKER AS A TRUSTED CONTACT. ON-THE-FLY VERIFICATION OF DECEPTIVE MESSAGES AND LINKS DIRECTLY WITHIN SECURE CHAT ENVIRONMENTS.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12 w-full">
-                <Link href="/scan" className="px-8 py-4 bg-cyan-500 text-black font-bold uppercase tracking-widest hover:bg-cyan-400 transition-colors w-full sm:w-auto text-center shrink-0">
-                  [ AUTHORIZE DEPLOYMENT ]
-                </Link>
-                <Link href="/community" className="px-8 py-4 border border-cyan-900 text-cyan-500 font-bold uppercase tracking-widest hover:border-cyan-400 hover:text-cyan-400 transition-colors w-full sm:w-auto text-center shrink-0 bg-[#050505]">
-                  ACCESS GLOBAL FEED
+
+              <div className="pt-4 flex flex-col sm:flex-row items-center md:justify-start justify-center gap-6 mt-8 w-full">
+                <Link
+                  href="https://wa.me/15551818730"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-4 bg-[#25D366] text-black font-bold uppercase tracking-widest hover:bg-white transition-colors w-full sm:w-auto text-center shrink-0 flex items-center justify-center gap-3 relative group overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-2 h-2 bg-black transform translate-x-[2px] -translate-y-[2px] rotate-45 z-10" />
+                  <div className="absolute top-0 left-0 w-2 h-2 bg-black transform -translate-x-[2px] -translate-y-[2px] rotate-45 z-10" />
+                  <span className="relative z-20 flex items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-5 h-5">
+                      <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+                    </svg>
+                    [ INITIATE CHAT ]
+                  </span>
                 </Link>
               </div>
             </div>
@@ -194,7 +211,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 mb-16">
             <div className="col-span-2 md:col-span-2">
               <div className="mt-2 mb-8">
-                <Image src="/logo.png" alt="CivixShield Logo" width={200} height={50} className="object-contain w-[160px] md:w-[200px] h-auto" />
+                <Image src="/logo.png" alt="CivixShield Logo" width={200} height={50} className="object-contain w-[160px] md:w-[200px]" style={{ height: 'auto' }} />
               </div>
               <p className="text-cyan-600/80 text-sm max-w-sm leading-relaxed uppercase tracking-wider">
                 &gt; Advancing digital security globally through next-generation AI-powered threat detection and community intelligence.

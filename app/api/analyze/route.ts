@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     // Check URLs if present
     const urls = extractUrlsFromText(content)
     let urlVerdict = undefined
-    
+
     // Evaluate main URL using strict analyzer
     if (urls.length > 0) {
       urlVerdict = await analyzeUrlStrict(urls[0])
@@ -33,8 +33,23 @@ export async function POST(req: NextRequest) {
 
     // Adjust risk score based on URL findings
     let finalRiskScore = fraudAnalysis.risk_score
+
+    // Safety Net: Enforce minimum risk floors based on strict heuristic URL results
+    // The upgraded AI model handles this naturally, but this protects the system 
+    // if the AI API fails over to offline-fallback mode.
+    if (urlVerdict) {
+      if (urlVerdict.verdict === 'Phishing') {
+        finalRiskScore = Math.max(finalRiskScore, 85) // Ensure High/Critical bucket
+        if (!urlVerdict.is_live && !fraudAnalysis.red_flags.includes('Domain does not exist or is fully offline')) {
+          fraudAnalysis.red_flags.unshift('Domain does not exist or is fully offline')
+        }
+      } else if (urlVerdict.verdict === 'Suspicious') {
+        finalRiskScore = Math.max(finalRiskScore, 40) // Ensure Medium bucket
+      }
+    }
+
     if (hasUnsafeUrl) {
-      finalRiskScore = Math.min(100, fraudAnalysis.risk_score + 20)
+      finalRiskScore = Math.min(100, finalRiskScore + 50) // Google Safe Browsing flag is critical
     }
 
     // Determine risk level based on adjusted score
@@ -56,7 +71,7 @@ export async function POST(req: NextRequest) {
       urls_found: urls.length,
       unsafe_urls: unsafeUrls.length,
       url_threats: unsafeUrls.flatMap(r => r.threat_types || []),
-      url_verdict: urlVerdict
+      url_verdict: urlVerdict || null
     }
 
     // Save to database regardless of login status
