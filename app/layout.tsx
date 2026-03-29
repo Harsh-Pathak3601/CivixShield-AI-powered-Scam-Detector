@@ -5,6 +5,7 @@ import { AuthProvider } from '@/components/providers/auth-provider'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { LanguageProvider } from '@/lib/i18n/LanguageContext'
 import { Navbar } from '@/components/shared/navbar'
+import Script from 'next/script'
 import './globals.css'
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -59,6 +60,22 @@ export default function RootLayout({
           </AuthProvider>
           <Analytics />
         </ThemeProvider>
+
+        <div id="google_translate_element" style={{ display: "none" }}></div>
+        <Script
+          src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+          strategy="afterInteractive"
+        />
+        <Script id="google-translate-init" strategy="afterInteractive">
+          {`
+            function googleTranslateElementInit() {
+              new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                autoDisplay: false
+              }, 'google_translate_element');
+            }
+          `}
+        </Script>
       </body>
     </html>
   )
