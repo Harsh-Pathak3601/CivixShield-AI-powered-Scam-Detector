@@ -82,7 +82,7 @@ export function AnalysisFindings({
               <span className="text-gray-300 leading-relaxed">&gt; {urlVerdict.reason}</span>
             </div>
 
-            {urlVerdict.detected_issues.length > 0 && (
+            {urlVerdict.detected_issues.length > 0 && urlVerdict.verdict !== 'Legitimate' && (
               <div className="mt-4 pt-4 border-t border-gray-800/50">
                 <span className="block text-gray-400 uppercase text-xs tracking-widest mb-3">Detected Flags:</span>
                 <div className="flex flex-wrap gap-2">
@@ -98,14 +98,7 @@ export function AnalysisFindings({
         </div>
       )}
 
-      {/* Main AI Explanation */}
-      <div className="bg-[#0a0f14] border border-cyan-500/50 p-6 sm:p-8 relative shadow-[0_0_15px_rgba(34,211,238,0.05)]">
-        <div className="absolute top-0 left-0 w-2 h-2 bg-cyan-500" />
-        <h3 className="text-lg sm:text-xl font-bold tracking-[0.1em] text-cyan-400 uppercase mb-4 border-b border-cyan-900/50 pb-3">Analysis Summary</h3>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-300">
-          &gt; {explanation}
-        </p>
-      </div>
+
 
       {/* Red Flags */}
       {redFlags.length > 0 && (
