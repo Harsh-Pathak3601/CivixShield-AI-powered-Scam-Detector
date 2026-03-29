@@ -10,7 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Copy, Check, Image, Mic, Link as LinkIcon, MessageSquare, QrCode, Shield, ArrowRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
-import QrScanner from 'qr-scanner'
+import jsQR from 'jsqr'
 
 interface AnalysisFormProps {
   onAnalyze: (content: string, type: string, mediaBase64?: string, mediaType?: string) => Promise<void>
@@ -45,15 +45,38 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
     setQrDecodedData(null)
     setQrError(null)
     setQrDecoding(true)
+    
     try {
-      // Use Nimiq's robust qr-scanner instead of older raw jsQR
-      const result = await QrScanner.scanImage(file, { returnDetailedScanResult: true })
-      if (result && result.data) {
-        setQrDecodedData(result.data)
-        toast.success('QR Code decoded locally!')
+      const img = new globalThis.Image()
+      const objectUrl = URL.createObjectURL(file)
+      
+      await new Promise((resolve, reject) => {
+        img.onload = resolve
+        img.onerror = reject
+        img.src = objectUrl
+      })
+      URL.revokeObjectURL(objectUrl)
+
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      
+      if (!ctx) throw new Error("Could not get canvas context")
+      
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+
+      const code = jsQR(imageData.data, imageData.width, imageData.height)
+      
+      if (code && code.data) {
+        setQrDecodedData(code.data)
+        toast.success('QR Code decoded locally using jsQR!')
+      } else {
+        throw new Error('No QR code detected.')
       }
     } catch (err) {
-      setQrError('Local decode failed. The AI will attempt to read the code manually during analysis.')
+      setQrError('Local jsQR decode failed. The AI will attempt to read the code manually.')
     } finally {
       setQrDecoding(false)
     }

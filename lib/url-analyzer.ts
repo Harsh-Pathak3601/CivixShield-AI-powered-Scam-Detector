@@ -71,12 +71,16 @@ const TRUSTED_DOMAINS: Record<string, string> = {
   // UPI / PAYMENT PLATFORMS
   // ═══════════════════════════════════════════
   'paytm.com': 'Paytm',
+  'paytm.me': 'Paytm (Payment Link)',
   'phonepe.com': 'PhonePe',
   'pay.google.com': 'Google Pay',
+  'gpay.app': 'Google Pay (Payment Link)',
   'bhimupi.org.in': 'BHIM UPI',
   'npci.org.in': 'NPCI',
   'razorpay.com': 'Razorpay',
+  'razorpay.me': 'Razorpay (Payment Link)',
   'paypal.com': 'PayPal',
+  'paypal.me': 'PayPal (Payment Link)',
   'stripe.com': 'Stripe',
   'freecharge.in': 'Freecharge',
   'mobikwik.com': 'MobiKwik',
@@ -237,7 +241,15 @@ export async function analyzeUrlStrict(inputUrl: string): Promise<UrlVerdictResu
   // 1. Extract and sanitize URL
   let parsedUrl: URL
   try {
-    // try prepending http:// if not present just to parse
+    if (inputUrl.toLowerCase().startsWith('upi://')) {
+      // Direct pass for valid UPI formats
+      result.verdict = 'Legitimate'
+      result.confidence = 'High'
+      result.risk_score = 0
+      result.reason = 'Valid UPI payment payload'
+      return result
+    }
+    
     const urlToParse = inputUrl.startsWith('http') ? inputUrl : `http://${inputUrl}`
     parsedUrl = new URL(urlToParse)
   } catch (e) {

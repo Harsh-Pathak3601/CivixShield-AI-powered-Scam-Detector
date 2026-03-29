@@ -57,14 +57,125 @@ export async function analyzeFraudRisk(content: string, mediaBase64?: string, me
     if (cachedResult) return cachedResult
   }
 
-const systemPrompt = `You are a cybersecurity analysis engine for detecting phishing, scam URLs, and fraudulent messages.
+const systemPrompt = `You are an advanced cybersecurity URL analysis engine designed to detect phishing, scam, and malicious URLs with HIGH accuracy.
 
-IMPORTANT RULES:
-1. If the domain does NOT exist (DNS failure / cannot resolve) or is offline, mark it as HIGH RISK.
-2. If the website is unreachable but domain exists, mark as SUSPICIOUS.
-3. Do NOT assume a website is safe just because it is not flagged by Safe Browsing.
-4. Treat unknown or newly created domains as potentially suspicious.
-5. Be strict about brand impersonation (e.g., SBI, HDFC, ICICI, Paytm, Google, etc.).
+Your primary goal is ZERO false negatives (never mark a scam as safe).
+
+--------------------------------------------------
+📚 STEP 1: TRUSTED WHITELIST (STRICT)
+--------------------------------------------------
+
+Only the following domains are considered OFFICIALLY TRUSTED.
+
+🏦 BANKS (India)
+- sbi.co.in
+- onlinesbi.sbi
+- onlinesbi.com
+- hdfcbank.com
+- icicibank.com
+- axisbank.com
+- pnbindia.in
+- bankofbaroda.in
+- canarabank.com
+- unionbankofindia.co.in
+- bankofindia.co.in
+- indianbank.in
+- idbibank.in
+- yesbank.in
+- kotak.com
+- federalbank.co.in
+- indusind.com
+
+🏛️ GOVERNMENT
+- gov.in (any subdomain)
+- nic.in (any subdomain)
+- india.gov.in
+
+💳 UPI / PAYMENTS
+- paytm.com
+- phonepe.com
+- gpay (Google Pay official domains only)
+- bhimupi.org.in
+- npci.org.in
+
+🛒 E-COMMERCE
+- amazon.in
+- flipkart.com
+- meesho.com
+
+🌍 GLOBAL TECH
+- google.com
+- microsoft.com
+- apple.com
+- meta.com
+
+--------------------------------------------------
+🔍 STEP 2: DOMAIN VALIDATION
+--------------------------------------------------
+
+- Extract the ROOT DOMAIN from the URL
+- Compare EXACTLY with whitelist
+
+✔ If exact match → proceed to context check  
+❌ If NOT exact match → mark as PHISHING
+
+Examples:
+- sbi.co.in → valid
+- sbi.in → NOT valid ❌
+- sbi-login.co.in → NOT valid ❌
+
+--------------------------------------------------
+🧠 STEP 3: CONTEXT + PURPOSE CHECK
+--------------------------------------------------
+
+Even if domain is valid, verify PURPOSE:
+
+🚨 If URL contains:
+- login, verify, update, account, KYC, secure, payment
+
+Then:
+- Check if that domain is actually used for that purpose
+
+Example:
+- sbi.co.in/login → PHISHING ❌ (wrong usage)
+- onlinesbi.sbi/login → SAFE ✅
+
+--------------------------------------------------
+⚠️ STEP 4: SPOOF DETECTION
+--------------------------------------------------
+
+Mark as PHISHING if:
+- Typos (amaz0n, g00gle, sb1)
+- Extra words (secure, verify, update)
+- Suspicious TLDs (.xyz, .top, .online, .site)
+- Misleading subdomains (sbi.login.xyz)
+
+--------------------------------------------------
+🌐 STEP 5: UNKNOWN DOMAIN / QR PAYLOAD RULE
+--------------------------------------------------
+
+- If domain is NOT in whitelist, verify context BEFORE penalizing:
+  → If the URL is impersonating a bank/brand NOT in whitelist (e.g. sbi.in, sbi-login.xyz) → PHISHING ❌
+  → If it is a generic, unlisted domain providing a normal service (e.g. restaurant menu, personal vcard, event ticket, neutral company) AND it shows no malicious signs → YOU MUST mark as SAFE ✅ (0-20 score). Do NOT flag just because it is unknown!
+  → If it is a legitimate UPI payload (upi://pay?pa=...) → YOU MUST mark as SAFE ✅ (0-20 score).
+  → Only mark highly suspicious properties (.xyz with login, obvious typosquatting) as SUSPICIOUS/PHISHING ❌.
+
+--------------------------------------------------
+📊 STEP 6: FINAL OUTPUT
+--------------------------------------------------
+- SAFE ONLY IF:
+  ✔ exact whitelist domain with correct usage OR
+  ✔ harmless generic content (WiFi QRs, neutral web URLs, physical store menus) OR
+  ✔ standard UPI payment payloads
+
+- If domain mismatch to a known brand → PHISHING
+- If brand impersonation → PHISHING
+
+CRITICAL CALIBRATION FOR AI (FALSE POSITIVE PREVENTION):
+- DO NOT hallucinate scams. 
+- DO NOT assume a raw QR code image is "Quishing" (QR Phishing) just because it lacks clear branding or context.
+- DO NOT flag a random business website, WiFi code, or generic QR code as dangerous just because it is not on the bank whitelist.
+- If it looks like a normal, everyday QR scan (menu, payment, info, digital ticket), YOU MUST strongly default to LOW RISK (score 0-20). Only mark high risk if there are overt deceptive signs (like spelling errors mimicking a brand or fake warnings).
 
 INPUT CONTEXT:
 - URL: ${urlVerdict ? urlVerdict.url : 'None'}
@@ -72,37 +183,8 @@ INPUT CONTEXT:
 - Safe Browsing Flag: ${urlVerdict && urlVerdict.detected_issues.some((i: string) => i.includes('Safe Browsing')) ? 'MALICIOUS' : 'SAFE/UNKNOWN'}
 ${urlVerdict && urlVerdict.page_text ? `- Scraped Target Website Text: "${urlVerdict.page_text}"` : ''}
 
-ANALYZE THE USER'S MESSAGE FOR:
-- Fake domains (e.g., sbi-login.xyz, paytm-secure.net)
-- Typosquatting (sbi.co vs sbi.co.in)
-- Suspicious words (login, verify, urgent, update, account blocked)
-- Use of HTTP instead of HTTPS
-- Random characters, numbers, hyphens
-- Social engineering language (urgency, fear, rewards)
-
-DECISION LOGIC:
-- If Website Reachable = false → SUSPICIOUS or HIGH RISK
-- If Safe Browsing Flag = MALICIOUS → HIGH RISK
-- If domain looks fake or impersonates brand → SUSPICIOUS or HIGH RISK
-- If message contains phishing patterns → increase risk
-- If the URL/Message is a genuine, standard application (like a trusted UPI path, standard event QR, VCard, or legitimate document), mark it SAFE.
-
-CRUCIAL CALIBRATION (FALSE POSITIVE PREVENTION):
-You MUST accurately distinguish between real threats and legitimate content!
-- Do NOT hallucinate scams in legitimate payment QRs, official brand QRs, normal news articles, or standard business URLs.
-- If a QR Code simply points to a legitimate payment portal, website, or document without any malicious indicators, you MUST score it as Low Risk (0-20). 
-- ONLY flag content as High Risk if there is a distinct, manipulative threat indicator.
-
-IMPORTANT:
-- NEVER return a Low risk_score if an evaluated domain does not exist or is unreachable.
-- NEVER rely only on Safe Browsing.
-- Be cautious by default, but DO NOT falsely accuse genuine links.
-
-Provide a risk assessment from 0-100% where:
-- 0-20: Low risk (SAFE)
-- 21-50: Medium risk (SUSPICIOUS)
-- 51-80: High risk (HIGH_RISK)
-- 81-100: Critical risk (MALICIOUS SCAM)
+You must return a valid JSON object strictly matching the schema structure. Map your internal risk score classification to 0-100 logic.
+(0-20 SAFE, 21-50 SUSPICIOUS, 51-100 PHISHING or SCAM)
 `
 
   // Extract API key cleanly
@@ -238,14 +320,14 @@ export async function checkSafeBrowsingUrl(url: string): Promise<{ safe: boolean
 }
 
 export function extractUrlsFromText(text: string): string[] {
-  // Matches http://, https://, OR naked domains like example.com, example.co.in
-  const urlRegex = /(https?:\/\/[^\s]+)|(\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b(?:\/[^\s]*)?)/gi
+  // Matches http://, https://, upi://, custom app schemas, OR naked domains like example.com, example.co.in
+  const urlRegex = /((https?|upi|phonepe|gpay|paytm):\/\/[^\s]+)|(\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b(?:\/[^\s]*)?)/gi
   const matches = text.match(urlRegex) || []
   
   // Normalize URLs to have http:// if they are naked domains
   return matches.map(url => {
     url = url.trim()
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    if (!url.match(/^(https?|upi|phonepe|gpay|paytm):\/\//i) && url.includes('.')) {
       return `http://${url}`
     }
     return url
