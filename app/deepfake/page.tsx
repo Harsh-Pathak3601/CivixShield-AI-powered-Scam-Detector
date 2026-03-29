@@ -333,15 +333,19 @@ export default function DeepfakeDetector() {
 
         {/* Info Cards Row (always visible at bottom) */}
         {!result && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-10">
-            <div className="bg-[#050505] border-t-2 border-cyan-500 px-6 py-4 uppercase tracking-[0.2em] text-xs font-bold text-gray-500 flex flex-col justify-center shadow-lg">
-              IMAGES SUPPORTED
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mt-10 px-2 sm:px-0">
+            {/* Box 1: Images */}
+            <div className="bg-[#050505] border-t-2 border-cyan-500 px-5 py-4 uppercase tracking-[0.2em] text-[10px] sm:text-xs font-bold text-gray-500 shadow-lg flex items-center justify-between transition-colors hover:bg-[#080808]">
+              <span>Images Supported</span>
+              {/* Minimalist status indicator */}
+              <div className="h-1 w-3 bg-cyan-500/30" />
             </div>
-            <div className="bg-[#050505] border-t-2 border-yellow-500 px-6 py-4 uppercase tracking-[0.2em] text-xs font-bold text-gray-500 flex flex-col justify-center shadow-lg">
-              VIDEO SUPPORTED
-            </div>
-            <div className="bg-[#050505] border-t-2 border-red-500 px-6 py-4 uppercase tracking-[0.2em] text-xs font-bold text-gray-500 flex flex-col justify-center shadow-lg">
-              POWERED BY HIVE AI
+
+            {/* Box 2: Video */}
+            <div className="bg-[#050505] border-t-2 border-yellow-500 px-5 py-4 uppercase tracking-[0.2em] text-[10px] sm:text-xs font-bold text-gray-500 shadow-lg flex items-center justify-between transition-colors hover:bg-[#080808]">
+              <span>Video Supported</span>
+              {/* Minimalist status indicator */}
+              <div className="h-1 w-3 bg-yellow-500/30" />
             </div>
           </div>
         )}

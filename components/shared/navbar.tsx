@@ -112,7 +112,7 @@ export function Navbar() {
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="bg-[#050505] border-l border-cyan-900/50 p-0 font-mono w-[280px]">
+                <SheetContent aria-describedby={undefined} side="right" className="bg-[#050505] border-l border-cyan-900/50 p-0 font-mono w-[280px]">
                   <SheetTitle className="sr-only">Navigation</SheetTitle>
                   <div className="flex flex-col h-full pt-14 px-5 pb-6 overflow-y-auto">
                     <nav className="flex flex-col gap-1">

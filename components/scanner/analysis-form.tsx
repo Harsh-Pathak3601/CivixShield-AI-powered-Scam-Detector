@@ -92,7 +92,7 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
       // Send the actual QR poster image to Gemini so it can read surrounding text/warnings
       mediaBase64 = await getBase64(qrFile)
       mediaMimeType = qrFile.type || 'image/png'
-      
+
       if (qrDecodedData) {
         finalContent = `[QR Code Scanned Data: ${qrDecodedData}]\n\nPlease analyze this QR code destination and read any text on the surrounding poster image for signs of fraud.`
       } else {
@@ -115,51 +115,53 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
   const charCount = content.length
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto font-mono">
+    <div className="flex-grow flex flex-col items-center justify-center w-full font-mono relative z-10">
+      <div className="w-full max-w-2xl mx-auto">
 
-      {/* Outer Wrapper for perfectly continuous border along the clip-path cut */}
-      <div
-        className="w-full bg-cyan-500 p-[2px] shadow-[0_0_30px_rgba(34,211,238,0.1)]"
-        style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}
-      >
-        {/* Inner Terminal Block */}
+        {/* Outer Wrapper using standard border technique like Deepfake */}
         <div
-          className="relative bg-[#0a0f14] z-10 p-4 sm:p-8 md:p-12 h-full"
-          style={{ clipPath: 'polygon(0 0, calc(100% - 23px) 0, 100% 23px, 100% 100%, 0 100%)' }}
+          className="w-full h-full relative bg-[#0a0f14] p-1 shadow-[0_0_30px_rgba(34,211,238,0.1)] border-2 border-cyan-500"
+          style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}
         >
+          {/* Top Right Corner Accent */}
+          <div className="absolute top-0 right-0 w-6 h-6 bg-[#050505] border-b-2 border-l-2 border-cyan-500 transform translate-x-[2px] -translate-y-[2px] z-10" />
 
-          {/* Header Block */}
-          <div className="flex flex-col items-center justify-center text-center space-y-3 mb-8 sm:mb-12">
-            <h1 className="text-2xl sm:text-4xl font-bold tracking-wider text-white">
-              Security Scanner
-            </h1>
+          {/* Inner Terminal Block */}
+          <div className="w-full bg-[#0a0f14] relative z-20 p-6 md:p-12 h-full border border-dashed border-cyan-900/50 flex flex-col">
 
-          </div>
+            {/* Header Block */}
+            <div className="flex flex-col items-center justify-center text-center space-y-3 mb-8 sm:mb-12 w-full">
+              <h1 className="text-2xl sm:text-4xl font-extrabold tracking-wider text-white uppercase overflow-hidden break-words w-full">
+                Security Scanner
+              </h1>
+            </div>
 
-          {/* Tabs Control */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="flex w-full h-auto p-1 bg-[#17202A] rounded-xl border border-[#1f2937] justify-start sm:justify-center overflow-x-auto no-scrollbar gap-1 mb-8">
-              <TabsTrigger value="link" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-3 sm:px-6 rounded-lg data-[state=active]:bg-transparent data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-1 sm:gap-2">
-                <LinkIcon className="h-4 w-4 shrink-0" />
-                <span>Link</span>
-              </TabsTrigger>
-              <TabsTrigger value="message" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-3 sm:px-6 rounded-lg data-[state=active]:bg-transparent data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-1 sm:gap-2">
-                <MessageSquare className="h-4 w-4 shrink-0" />
-                <span>Message</span>
-              </TabsTrigger>
-              <TabsTrigger value="screenshot" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-3 sm:px-6 rounded-lg data-[state=active]:bg-transparent data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-1 sm:gap-2">
-                <Image className="h-4 w-4 shrink-0" />
-                <span>Screenshot</span>
-              </TabsTrigger>
-              <TabsTrigger value="audio" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-3 sm:px-6 rounded-lg data-[state=active]:bg-transparent data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-1 sm:gap-2">
-                <Mic className="h-4 w-4 shrink-0" />
-                <span>Audio</span>
-              </TabsTrigger>
-              <TabsTrigger value="qr" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-3 sm:px-6 rounded-lg data-[state=active]:bg-transparent data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-1 sm:gap-2">
-                <QrCode className="h-4 w-4 shrink-0" />
-                <span>QR Code</span>
-              </TabsTrigger>
-            </TabsList>
+            {/* Tabs Control */}
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex-1">
+              <div className="w-full mb-8">
+                <TabsList className="w-full flex flex-wrap h-auto bg-transparent border-0 justify-center gap-2">
+                  <TabsTrigger value="link" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-4 rounded-lg data-[state=active]:bg-cyan-900/30 data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-2 border border-transparent data-[state=active]:border-cyan-500/30">
+                    <LinkIcon className="h-4 w-4 shrink-0" />
+                    <span className="whitespace-nowrap">Link</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="message" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-4 rounded-lg data-[state=active]:bg-cyan-900/30 data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-2 border border-transparent data-[state=active]:border-cyan-500/30">
+                    <MessageSquare className="h-4 w-4 shrink-0" />
+                    <span className="whitespace-nowrap">Message</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="screenshot" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-4 rounded-lg data-[state=active]:bg-cyan-900/30 data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-2 border border-transparent data-[state=active]:border-cyan-500/30">
+                    <Image className="h-4 w-4 shrink-0" />
+                    <span className="whitespace-nowrap">Screenshot</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="audio" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-4 rounded-lg data-[state=active]:bg-cyan-900/30 data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-2 border border-transparent data-[state=active]:border-cyan-500/30">
+                    <Mic className="h-4 w-4 shrink-0" />
+                    <span className="whitespace-nowrap">Audio</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="qr" className="flex items-center justify-center flex-1 sm:flex-none text-xs sm:text-sm py-2 px-4 rounded-lg data-[state=active]:bg-cyan-900/30 data-[state=active]:text-cyan-400 data-[state=inactive]:text-gray-400 font-semibold transition-all duration-300 gap-2 border border-transparent data-[state=active]:border-cyan-500/30">
+                    <QrCode className="h-4 w-4 shrink-0" />
+                    <span className="whitespace-nowrap">QR Code</span>
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
             {/* Link Tab */}
             <TabsContent value="link" className="space-y-6 mt-0">
@@ -322,12 +324,12 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
           </Tabs>
 
           {/* Global Action Button */}
-          <div className="mt-12 relative">
+          <div className="mt-12 relative w-full overflow-hidden">
             {/* Black cutout corners simulated with absolute positioned boxes matching bg */}
             <Button
               onClick={handleAnalyze}
               disabled={(!content.trim() && !screenshotFile && !audioFile && !url && !qrFile) || isLoading}
-              className="w-full relative h-14 sm:h-16 bg-[#9C941A] hover:bg-[#b0a720] text-black font-bold uppercase tracking-[0.2em] rounded-none border-b-4 border-red-700 disabled:opacity-50 disabled:cursor-not-allowed group overflow-hidden"
+              className="w-full relative h-14 sm:h-16 bg-[#9C941A] hover:bg-[#b0a720] text-black font-bold uppercase tracking-wider sm:tracking-[0.2em] rounded-none border-b-4 border-red-700 disabled:opacity-50 disabled:cursor-not-allowed group overflow-hidden text-xs sm:text-base px-2 sm:px-4"
               size="lg"
             >
               {/* Corner cutouts */}
@@ -336,16 +338,16 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
               <div className="absolute bottom-0 left-0 w-3 h-3 bg-red-700 transform -translate-x-1.5 translate-y-1.5 rotate-45 z-10" />
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-red-700 transform translate-x-1.5 translate-y-1.5 rotate-45 z-10" />
 
-              <span className="relative z-20 flex items-center justify-center">
+              <span className="relative z-20 flex items-center justify-center whitespace-normal sm:whitespace-nowrap text-center">
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                    <Loader2 className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 w-5 animate-spin shrink-0" />
                     EXECUTING INTEGRITY SCAN...
                   </>
                 ) : (
                   <>
-                    <Shield className="mr-3 h-5 w-5" />
-                    ANALYZE {activeTab.toUpperCase()} INTEGRITY
+                    <Shield className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 w-5 shrink-0" />
+                    ANALYZE {activeTab.toUpperCase()} {activeTab === "screenshot" ? "" : "INTEGRITY"}
                   </>
                 )}
               </span>
@@ -357,6 +359,7 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
 
         </div>
       </div>
+    </div>
     </div>
   )
 }

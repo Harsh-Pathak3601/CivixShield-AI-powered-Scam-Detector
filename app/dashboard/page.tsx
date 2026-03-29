@@ -154,7 +154,7 @@ export default function DashboardPage() {
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="bg-[#050505] border-r border-white/5 p-0 font-mono w-[280px]">
+                <SheetContent aria-describedby={undefined} side="left" className="bg-[#050505] border-r border-white/5 p-0 font-mono w-[280px]">
                   <SheetTitle className="sr-only">Dashboard Navigation</SheetTitle>
                   <div className="flex flex-col h-full">
                     <div className="h-16 flex items-center px-6 border-b border-white/5">

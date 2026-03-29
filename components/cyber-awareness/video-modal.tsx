@@ -19,7 +19,7 @@ export const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
   
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-4xl bg-[#050505] border border-cyan-500/50 p-0 overflow-hidden rounded-xl shadow-[0_0_50px_rgba(34,211,238,0.2)]">
+      <DialogContent aria-describedby={undefined} className="max-w-4xl bg-[#050505] border border-cyan-500/50 p-0 overflow-hidden rounded-xl shadow-[0_0_50px_rgba(34,211,238,0.2)]">
         <DialogTitle className="sr-only">Video Player - {video.title}</DialogTitle>
         <DialogDescription className="sr-only">Playing {video.title} cybersecurity awareness video.</DialogDescription>
         <div className="relative aspect-video w-full bg-black">

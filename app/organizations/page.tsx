@@ -136,7 +136,7 @@ export default function OrganizationsPage() {
                   NEW ORG
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-[#0a0a0a] border border-cyan-500/50 text-white font-mono">
+              <DialogContent aria-describedby={undefined} className="bg-[#0a0a0a] border border-cyan-500/50 text-white font-mono">
                 <DialogHeader>
                   <DialogTitle className="text-cyan-400 uppercase tracking-widest">Create Organization</DialogTitle>
                   <DialogDescription className="text-gray-500 text-xs">
@@ -197,7 +197,7 @@ export default function OrganizationsPage() {
                   Create Your First Unit
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-[#0a0a0a] border border-cyan-500/50 text-white font-mono">
+              <DialogContent aria-describedby={undefined} className="bg-[#0a0a0a] border border-cyan-500/50 text-white font-mono">
                 <DialogHeader>
                   <DialogTitle className="text-cyan-400 uppercase tracking-widest">Initial Setup</DialogTitle>
                 </DialogHeader>
@@ -276,7 +276,7 @@ export default function OrganizationsPage() {
                         Command Center
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-2xl bg-[#0a0a0a] border border-cyan-500 text-white font-mono rounded-none">
+                    <DialogContent aria-describedby={undefined} className="max-w-2xl bg-[#0a0a0a] border border-cyan-500 text-white font-mono rounded-none">
                       <DialogHeader>
                         <DialogTitle className="text-2xl font-black uppercase tracking-widest text-white">{org.name}</DialogTitle>
                         <DialogDescription className="text-cyan-600 text-[10px] uppercase font-bold tracking-[0.3em]">Operational Oversight & Management</DialogDescription>
