@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
-import { Activity, ShieldAlert, Users, Radar, AlertTriangle, RefreshCw, Trash2, Loader2 } from 'lucide-react'
+import { Activity, ShieldAlert, Users, Radar, AlertTriangle } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 interface CommunityScam {
@@ -20,25 +20,7 @@ interface CommunityScam {
 export default function CommunityPage() {
   const [scams, setScams] = useState<CommunityScam[]>([])
   const [loading, setLoading] = useState(true)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this threat from the intelligence network?')) return;
-    
-    setDeletingId(id)
-    try {
-      const res = await fetch(`/api/community/feed?id=${id}`, { method: 'DELETE' })
-      if (!res.ok) throw new Error('Failed to delete')
-      
-      setScams(current => current.filter(s => s.id !== id))
-    } catch (error) {
-      console.error('Error deleting scam:', error)
-      alert('Failed to delete. Please try again.')
-    } finally {
-      setDeletingId(null)
-    }
-  }
 
   const fetchFeed = useCallback(async () => {
     try {
@@ -127,16 +109,6 @@ export default function CommunityPage() {
                 {/* Cyberpunk accent pixel */}
                 <div className="absolute top-0 right-0 w-2 h-2 bg-gray-700 group-hover:bg-cyan-500 transition-colors" />
                 <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-800 to-transparent group-hover:via-cyan-900 transition-colors" />
-
-                {/* Delete Button */}
-                <button 
-                  onClick={() => handleDelete(scam.id)}
-                  disabled={deletingId === scam.id}
-                  className="absolute top-4 right-4 z-10 text-gray-600 hover:text-red-500 transition-colors bg-black/40 p-2 rounded border border-transparent hover:border-red-900/50"
-                  title="Purge record"
-                >
-                  {deletingId === scam.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
-                </button>
 
                 <div className="flex flex-col lg:flex-row gap-6">
                   {/* Left Column: Risk Badge */}

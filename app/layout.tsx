@@ -13,12 +13,12 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
-  title: 'Cyber Safety - AI Fraud Detection',
+  title: 'CivixShield - AI Fraud Detection',
   description: 'Protect yourself from digital fraud, scams, and phishing with AI-powered real-time fraud detection. Analyze messages, emails, URLs, and social media for security threats.',
   generator: 'v0.app',
   keywords: 'fraud detection, scam detection, phishing, cybersecurity, AI security, digital safety',
   openGraph: {
-    title: 'Cyber Safety - Protect from Digital Fraud',
+    title: 'CivixShield - Protect from Digital Fraud',
     description: 'AI-powered fraud detection platform for individuals and organizations',
     type: 'website',
     images: [{ url: '/logo.png' }],
@@ -36,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
-      <body className="font-mono bg-background text-foreground antialiased min-h-screen relative">
+      <body className="font-mono bg-background text-foreground antialiased min-h-screen relative" suppressHydrationWarning>
         {/* Global Red Cyberpunk Grid Background */}
         <div
           className="fixed inset-0 pointer-events-none z-[-1]"

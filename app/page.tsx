@@ -37,10 +37,10 @@ export default function Home() {
 
       <main className="relative z-10 pt-16 pb-32">
         {/* Terminal Hero Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-20">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10">
           <div className="flex flex-col items-center text-center space-y-10 max-w-5xl mx-auto">
-            <div className="space-y-4 mb-4">
-              <h1 className="text-6xl sm:text-7xl md:text-7xl font-black tracking-tighter text-gray-200 leading-[1] font-sans">
+            <div className="space-y-4 mb-4 pt-4">
+              <h1 className="text-6xl sm:text-7xl md:text-7xl font-black tracking-tighter text-gray-200 leading-[1.1] font-sans">
                 Your AI Guardian <br />
                 Against <span className="text-[#ffff00]" style={{ textShadow: '4px 4px 0px #dc2626' }}>ONLINE</span> <br />
                 <span className="text-[#ffff00]" style={{ textShadow: '4px 4px 0px #dc2626', marginLeft: '0.1em' }}>SCAMS</span>
@@ -75,7 +75,7 @@ export default function Home() {
 
 
         {/* Bento Grid Features - Terminal Reconstruction */}
-        <section id="features" className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="features" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20 space-y-6">
             <h2 className="text-4xl md:text-5xl font-bold tracking-[0.1em] text-white uppercase">
               THE COMPLETE INTELLIGENCE STACK
@@ -210,7 +210,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 mb-16">
             <div className="col-span-2 md:col-span-2">
               <div className="mt-2 mb-8">
-                <Image src="/logo.png" alt="CivixShield Logo" width={200} height={50} className="object-contain w-[160px] md:w-[200px]" style={{ height: 'auto' }} />
+                <Image src="/logo.png" alt="CivixShield Logo" width={200} height={50} className="object-contain w-[160px] md:w-[200px] h-auto" />
               </div>
               <p className="text-cyan-600/80 text-sm max-w-sm leading-relaxed uppercase tracking-wider">
                 &gt; Advancing digital security globally through next-generation AI-powered threat detection and community intelligence.

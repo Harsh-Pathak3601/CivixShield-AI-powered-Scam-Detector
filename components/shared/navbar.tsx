@@ -55,11 +55,11 @@ export function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center group flex-shrink-0 mr-1 xl:mr-2">
-            <Image src="/logo.png" alt="CivixShield Logo" width={200} height={50} className="object-contain w-[120px] lg:w-[130px] xl:w-[160px]" style={{ height: 'auto' }} priority />
+            <Image src="/logo.png" alt="CivixShield Logo" width={200} height={50} className="object-contain w-[120px] lg:w-[130px] xl:w-[160px] h-auto" priority />
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 bg-[#0a0f14]/80 border border-cyan-900/40 rounded-sm px-1 xl:px-2 py-1.5">
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 bg-[#0a0f14]/80 border border-cyan-900/40 rounded-sm px-1 xl:px-2 py-1.5">
             {navLinks.map((link) => {
               const isActive = pathname === link.href
               const Icon = link.icon
@@ -70,11 +70,11 @@ export function Navbar() {
                   className={`relative flex items-center whitespace-nowrap gap-1.5 px-2 xl:px-3 py-1.5 text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.05em] xl:tracking-[0.12em] transition-all duration-200 ${accentColor(link.accent, isActive)} ${isActive ? 'bg-cyan-950/40' : 'hover:bg-cyan-950/20'}`}
                 >
                   {link.pulse ? (
-                    <span className={`w-1.5 h-1.5 ${dotColor(link.accent)} rounded-full animate-pulse`} />
+                    <span className={`w-1.5 h-1.5 ${dotColor(link.accent)} rounded-full animate-pulse shrink-0`} />
                   ) : (
-                    <Icon className="w-3 h-3 opacity-60" />
+                    <Icon className="w-3 h-3 opacity-60 shrink-0" />
                   )}
-                  {link.label}
+                  <span className="shrink-0">{link.label}</span>
                   {isActive && (
                     <div className="absolute bottom-0 left-2 right-2 h-[2px] bg-cyan-400 rounded-full" />
                   )}
