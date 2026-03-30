@@ -238,3 +238,32 @@
     background-position: 200% center;
   }
 }
+
+/* Hide Google Translate Banner and Tooltip */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+}
+.goog-tooltip {
+  display: none !important;
+}
+.goog-tooltip:hover {
+  display: none !important;
+}
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important; 
+  box-shadow: none !important;
+}
+#goog-gt-tt {
+  display: none !important;
+}
+/* New classes used by Google Translate for banner */
+.VIpgJd-Zvi9od-aZ2wEe-wOHMyf {
+  display: none !important;
+}
+.VIpgJd-Zvi9od-aZ2wEe-OiiCO {
+  display: none !important;
+}

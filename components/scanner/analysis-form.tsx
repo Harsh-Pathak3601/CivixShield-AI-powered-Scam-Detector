@@ -45,11 +45,11 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
     setQrDecodedData(null)
     setQrError(null)
     setQrDecoding(true)
-    
+
     try {
       const img = new globalThis.Image()
       const objectUrl = URL.createObjectURL(file)
-      
+
       await new Promise((resolve, reject) => {
         img.onload = resolve
         img.onerror = reject
@@ -61,14 +61,14 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
       canvas.width = img.width
       canvas.height = img.height
       const ctx = canvas.getContext('2d')
-      
+
       if (!ctx) throw new Error("Could not get canvas context")
-      
+
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
       const code = jsQR(imageData.data, imageData.width, imageData.height)
-      
+
       if (code && code.data) {
         setQrDecodedData(code.data)
         toast.success('QR Code decoded locally using jsQR!')
@@ -186,203 +186,196 @@ export function AnalysisForm({ onAnalyze, isLoading }: AnalysisFormProps) {
                 </TabsList>
               </div>
 
-            {/* Link Tab */}
-            <TabsContent value="link" className="space-y-6 mt-0">
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                  <LinkIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <Input
-                  type="url"
-                  placeholder="https://example.com"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  disabled={isLoading}
-                  className="h-16 bg-[#05080a] border border-cyan-900/50 rounded-none pl-12 text-lg text-gray-200 placeholder:text-gray-600 focus-visible:ring-0 focus-visible:border-cyan-400 transition-all shadow-inner"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Shield className="w-4 h-4 text-gray-500" />
-                <span>
-                  <a href="/login" className="text-cyan-400 underline hover:text-cyan-300 decoration-cyan-400/50 underline-offset-4">Sign in</a> to share to the Community Ledger
-                </span>
-              </div>
-            </TabsContent>
-
-            {/* Message Tab */}
-            <TabsContent value="message" className="space-y-6 mt-0">
-              <div className="relative group">
-                <div className="absolute top-5 left-4 pointer-events-none z-10">
-                  <MessageSquare className="h-4 w-4 text-gray-500" />
-                </div>
-                <Textarea
-                  placeholder="Paste suspicious text or message..."
-                  value={content}
-                  onChange={(e) => setContent(e.target.value.slice(0, maxChars))}
-                  disabled={isLoading}
-                  className="min-h-[120px] bg-[#05080a] border border-cyan-900/50 rounded-none pl-12 pt-4 text-base text-gray-200 placeholder:text-gray-600 focus-visible:ring-0 focus-visible:border-cyan-400 transition-all shadow-inner resize-y"
-                />
-              </div>
-
-              <div className="flex justify-between items-center text-xs text-cyan-700">
-                <span>{charCount}/{maxChars} chars parsed</span>
-                <button onClick={copyContent} className="hover:text-cyan-400 flex items-center gap-1 uppercase tracking-wider">
-                  {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                  {copied ? 'Copied' : 'Copy Data'}
-                </button>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="screenshot" className="space-y-6 mt-0">
-              <div className="border border-dashed border-cyan-800/50 bg-[#05080a] p-10 text-center hover:border-cyan-500 transition-colors cursor-pointer group relative">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files?.[0]) {
-                      setScreenshotFile(e.target.files[0])
-                    }
-                  }}
-                  className="hidden"
-                  id="screenshot-input"
-                  disabled={isLoading}
-                />
-                <label htmlFor="screenshot-input" className="cursor-pointer block min-h-[140px] flex flex-col items-center justify-center">
-                  {!screenshotFile ? (
-                    <>
-                      <Image className="h-10 w-10 text-cyan-600 mx-auto mb-4 group-hover:text-cyan-400" />
-                      <p className="text-base text-gray-300">Click to upload image payload</p>
-                      <p className="text-sm text-cyan-800 mt-2">PNG, JPG, GIF max 10MB</p>
-                    </>
-                  ) : (
-                    <div className="relative w-full max-w-[300px] aspect-auto mx-auto border-2 border-cyan-500/50 rounded-md overflow-hidden bg-black/50">
-                      <img
-                        src={URL.createObjectURL(screenshotFile)}
-                        alt="Upload preview"
-                        className="w-full h-auto object-contain max-h-[250px]"
-                      />
-                      <div className="absolute inset-0 bg-cyan-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                        <span className="text-cyan-400 font-bold bg-black/60 px-3 py-1 rounded">Click to Change Image</span>
-                      </div>
-                    </div>
-                  )}
-                </label>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="audio" className="space-y-6 mt-0">
-              <div className="border border-dashed border-cyan-800/50 bg-[#05080a] p-10 text-center hover:border-cyan-500 transition-colors cursor-pointer group">
-                <input type="file" accept="audio/*" onChange={(e) => { if (e.target.files?.[0]) setAudioFile(e.target.files[0]) }} className="hidden" id="audio-input" disabled={isLoading} />
-                <label htmlFor="audio-input" className="cursor-pointer block">
-                  <Mic className="h-10 w-10 text-cyan-600 mx-auto mb-4 group-hover:text-cyan-400" />
-                  <p className="text-base text-gray-300">Click to upload voice payload</p>
-                  <p className="text-sm text-cyan-800 mt-2">MP3, WAV, M4A max 25MB</p>
-                  {audioFile && <p className="text-sm text-cyan-400 mt-4">&gt; Payload Loaded: {audioFile.name}</p>}
-                </label>
-              </div>
-            </TabsContent>
-
-            {/* QR Code Tab */}
-            <TabsContent value="qr" className="space-y-6 mt-0">
-              <div className="border border-dashed border-cyan-800/50 bg-[#05080a] p-10 text-center hover:border-cyan-500 transition-colors cursor-pointer group relative">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files?.[0]) handleQrUpload(e.target.files[0])
-                  }}
-                  className="hidden"
-                  id="qr-input"
-                  disabled={isLoading || qrDecoding}
-                />
-                <label htmlFor="qr-input" className="cursor-pointer block min-h-[140px] flex flex-col items-center justify-center">
-                  {!qrFile ? (
-                    <>
-                      <QrCode className="h-10 w-10 text-cyan-600 mx-auto mb-4 group-hover:text-cyan-400" />
-                      <p className="text-base text-gray-300">Click to upload QR Code image</p>
-                      <p className="text-sm text-cyan-800 mt-2">PNG, JPG — we'll extract the hidden URL/data</p>
-                    </>
-                  ) : (
-                    <div className="relative w-full max-w-[200px] aspect-square mx-auto border-2 border-cyan-500/50 rounded-md overflow-hidden bg-black/50">
-                      <img
-                        src={URL.createObjectURL(qrFile)}
-                        alt="QR preview"
-                        className="w-full h-full object-contain"
-                      />
-                      <div className="absolute inset-0 bg-cyan-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                        <span className="text-cyan-400 font-bold bg-black/60 px-3 py-1 rounded">Click to Change</span>
-                      </div>
-                    </div>
-                  )}
-                </label>
-              </div>
-
-              {qrDecoding && (
-                <div className="flex items-center gap-3 text-cyan-400 text-sm">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Decoding QR code...</span>
-                </div>
-              )}
-
-              {qrError && (
-                <div className="bg-red-950/30 border border-red-800/50 p-4 text-red-400 text-sm">
-                  &gt; {qrError}
-                </div>
-              )}
-
-              {qrDecodedData && (
-                <div className="space-y-3">
-                  <div className="bg-[#0d1117] border border-cyan-800/50 p-4">
-                    <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">Decoded QR Content:</p>
-                    <p className="text-sm text-gray-200 font-mono break-all bg-black/30 p-3 border border-gray-800 rounded">{qrDecodedData}</p>
+              {/* Link Tab */}
+              <TabsContent value="link" className="space-y-6 mt-0">
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                    <LinkIcon className="h-4 w-4 text-gray-500" />
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                    <Shield className="w-3 h-3" />
-                    <span>Click &quot;Analyze&quot; below to check if this link/content is safe</span>
-                  </div>
+                  <Input
+                    type="url"
+                    placeholder="https://example.com"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    disabled={isLoading}
+                    className="h-16 bg-[#05080a] border border-cyan-900/50 rounded-none pl-12 text-lg text-gray-200 placeholder:text-gray-600 focus-visible:ring-0 focus-visible:border-cyan-400 transition-all shadow-inner"
+                  />
                 </div>
-              )}
-            </TabsContent>
-          </Tabs>
+              </TabsContent>
 
-          {/* Global Action Button */}
-          <div className="mt-12 relative w-full overflow-hidden">
-            {/* Black cutout corners simulated with absolute positioned boxes matching bg */}
-            <Button
-              onClick={handleAnalyze}
-              disabled={(!content.trim() && !screenshotFile && !audioFile && !url && !qrFile) || isLoading}
-              className="w-full relative h-14 sm:h-16 bg-[#9C941A] hover:bg-[#b0a720] text-black font-bold uppercase tracking-wider sm:tracking-[0.2em] rounded-none border-b-4 border-red-700 disabled:opacity-50 disabled:cursor-not-allowed group overflow-hidden text-xs sm:text-base px-2 sm:px-4"
-              size="lg"
-            >
-              {/* Corner cutouts */}
-              <div className="absolute top-0 left-0 w-3 h-3 bg-[#0a0f14] transform -translate-x-1.5 -translate-y-1.5 rotate-45 z-10" />
-              <div className="absolute top-0 right-0 w-3 h-3 bg-[#0a0f14] transform translate-x-1.5 -translate-y-1.5 rotate-45 z-10" />
-              <div className="absolute bottom-0 left-0 w-3 h-3 bg-red-700 transform -translate-x-1.5 translate-y-1.5 rotate-45 z-10" />
-              <div className="absolute bottom-0 right-0 w-3 h-3 bg-red-700 transform translate-x-1.5 translate-y-1.5 rotate-45 z-10" />
+              {/* Message Tab */}
+              <TabsContent value="message" className="space-y-6 mt-0">
+                <div className="relative group">
+                  <div className="absolute top-5 left-4 pointer-events-none z-10">
+                    <MessageSquare className="h-4 w-4 text-gray-500" />
+                  </div>
+                  <Textarea
+                    placeholder="Paste suspicious text or message..."
+                    value={content}
+                    onChange={(e) => setContent(e.target.value.slice(0, maxChars))}
+                    disabled={isLoading}
+                    className="min-h-[120px] bg-[#05080a] border border-cyan-900/50 rounded-none pl-12 pt-4 text-base text-gray-200 placeholder:text-gray-600 focus-visible:ring-0 focus-visible:border-cyan-400 transition-all shadow-inner resize-y"
+                  />
+                </div>
 
-              <span className="relative z-20 flex items-center justify-center whitespace-normal sm:whitespace-nowrap text-center">
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 w-5 animate-spin shrink-0" />
-                    EXECUTING INTEGRITY SCAN...
-                  </>
-                ) : (
-                  <>
-                    <Shield className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 w-5 shrink-0" />
-                    ANALYZE {activeTab.toUpperCase()} {activeTab === "screenshot" ? "" : "INTEGRITY"}
-                  </>
+                <div className="flex justify-between items-center text-xs text-cyan-700">
+                  <span>{charCount}/{maxChars} chars parsed</span>
+                  <button onClick={copyContent} className="hover:text-cyan-400 flex items-center gap-1 uppercase tracking-wider">
+                    {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                    {copied ? 'Copied' : 'Copy Data'}
+                  </button>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="screenshot" className="space-y-6 mt-0">
+                <div className="border border-dashed border-cyan-800/50 bg-[#05080a] p-10 text-center hover:border-cyan-500 transition-colors cursor-pointer group relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        setScreenshotFile(e.target.files[0])
+                      }
+                    }}
+                    className="hidden"
+                    id="screenshot-input"
+                    disabled={isLoading}
+                  />
+                  <label htmlFor="screenshot-input" className="cursor-pointer block min-h-[140px] flex flex-col items-center justify-center">
+                    {!screenshotFile ? (
+                      <>
+                        <Image className="h-10 w-10 text-cyan-600 mx-auto mb-4 group-hover:text-cyan-400" />
+                        <p className="text-base text-gray-300">Click to upload image payload</p>
+                        <p className="text-sm text-cyan-800 mt-2">PNG, JPG, GIF max 10MB</p>
+                      </>
+                    ) : (
+                      <div className="relative w-full max-w-[300px] aspect-auto mx-auto border-2 border-cyan-500/50 rounded-md overflow-hidden bg-black/50">
+                        <img
+                          src={URL.createObjectURL(screenshotFile)}
+                          alt="Upload preview"
+                          className="w-full h-auto object-contain max-h-[250px]"
+                        />
+                        <div className="absolute inset-0 bg-cyan-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                          <span className="text-cyan-400 font-bold bg-black/60 px-3 py-1 rounded">Click to Change Image</span>
+                        </div>
+                      </div>
+                    )}
+                  </label>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="audio" className="space-y-6 mt-0">
+                <div className="border border-dashed border-cyan-800/50 bg-[#05080a] p-10 text-center hover:border-cyan-500 transition-colors cursor-pointer group">
+                  <input type="file" accept="audio/*" onChange={(e) => { if (e.target.files?.[0]) setAudioFile(e.target.files[0]) }} className="hidden" id="audio-input" disabled={isLoading} />
+                  <label htmlFor="audio-input" className="cursor-pointer block">
+                    <Mic className="h-10 w-10 text-cyan-600 mx-auto mb-4 group-hover:text-cyan-400" />
+                    <p className="text-base text-gray-300">Click to upload voice payload</p>
+                    <p className="text-sm text-cyan-800 mt-2">MP3, WAV, M4A max 25MB</p>
+                    {audioFile && <p className="text-sm text-cyan-400 mt-4">&gt; Payload Loaded: {audioFile.name}</p>}
+                  </label>
+                </div>
+              </TabsContent>
+
+              {/* QR Code Tab */}
+              <TabsContent value="qr" className="space-y-6 mt-0">
+                <div className="border border-dashed border-cyan-800/50 bg-[#05080a] p-10 text-center hover:border-cyan-500 transition-colors cursor-pointer group relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) handleQrUpload(e.target.files[0])
+                    }}
+                    className="hidden"
+                    id="qr-input"
+                    disabled={isLoading || qrDecoding}
+                  />
+                  <label htmlFor="qr-input" className="cursor-pointer block min-h-[140px] flex flex-col items-center justify-center">
+                    {!qrFile ? (
+                      <>
+                        <QrCode className="h-10 w-10 text-cyan-600 mx-auto mb-4 group-hover:text-cyan-400" />
+                        <p className="text-base text-gray-300">Click to upload QR Code image</p>
+                        <p className="text-sm text-cyan-800 mt-2">PNG, JPG — we'll extract the hidden URL/data</p>
+                      </>
+                    ) : (
+                      <div className="relative w-full max-w-[200px] aspect-square mx-auto border-2 border-cyan-500/50 rounded-md overflow-hidden bg-black/50">
+                        <img
+                          src={URL.createObjectURL(qrFile)}
+                          alt="QR preview"
+                          className="w-full h-full object-contain"
+                        />
+                        <div className="absolute inset-0 bg-cyan-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                          <span className="text-cyan-400 font-bold bg-black/60 px-3 py-1 rounded">Click to Change</span>
+                        </div>
+                      </div>
+                    )}
+                  </label>
+                </div>
+
+                {qrDecoding && (
+                  <div className="flex items-center gap-3 text-cyan-400 text-sm">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Decoding QR code...</span>
+                  </div>
                 )}
-              </span>
 
-              {/* Scanline hover effect */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/20 to-transparent translate-y-[-100%] group-hover:translate-y-[100%] transition-transform duration-1000 ease-in-out" />
-            </Button>
+                {qrError && (
+                  <div className="bg-red-950/30 border border-red-800/50 p-4 text-red-400 text-sm">
+                    &gt; {qrError}
+                  </div>
+                )}
+
+                {qrDecodedData && (
+                  <div className="space-y-3">
+                    <div className="bg-[#0d1117] border border-cyan-800/50 p-4">
+                      <p className="text-xs text-cyan-600 uppercase tracking-widest mb-2">Decoded QR Content:</p>
+                      <p className="text-sm text-gray-200 font-mono break-all bg-black/30 p-3 border border-gray-800 rounded">{qrDecodedData}</p>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <Shield className="w-3 h-3" />
+                      <span>Click &quot;Analyze&quot; below to check if this link/content is safe</span>
+                    </div>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+
+            {/* Global Action Button */}
+            <div className="mt-12 relative w-full overflow-hidden">
+              {/* Black cutout corners simulated with absolute positioned boxes matching bg */}
+              <Button
+                onClick={handleAnalyze}
+                disabled={(!content.trim() && !screenshotFile && !audioFile && !url && !qrFile) || isLoading}
+                className="w-full relative h-14 sm:h-16 bg-[#9C941A] hover:bg-[#b0a720] text-black font-bold uppercase tracking-wider sm:tracking-[0.2em] rounded-none border-b-4 border-red-700 disabled:opacity-50 disabled:cursor-not-allowed group overflow-hidden text-xs sm:text-base px-2 sm:px-4"
+                size="lg"
+              >
+                {/* Corner cutouts */}
+                <div className="absolute top-0 left-0 w-3 h-3 bg-[#0a0f14] transform -translate-x-1.5 -translate-y-1.5 rotate-45 z-10" />
+                <div className="absolute top-0 right-0 w-3 h-3 bg-[#0a0f14] transform translate-x-1.5 -translate-y-1.5 rotate-45 z-10" />
+                <div className="absolute bottom-0 left-0 w-3 h-3 bg-red-700 transform -translate-x-1.5 translate-y-1.5 rotate-45 z-10" />
+                <div className="absolute bottom-0 right-0 w-3 h-3 bg-red-700 transform translate-x-1.5 translate-y-1.5 rotate-45 z-10" />
+
+                <span className="relative z-20 flex items-center justify-center whitespace-normal sm:whitespace-nowrap text-center">
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 w-5 animate-spin shrink-0" />
+                      EXECUTING INTEGRITY SCAN...
+                    </>
+                  ) : (
+                    <>
+                      <Shield className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 w-5 shrink-0" />
+                      ANALYZE {activeTab.toUpperCase()} {activeTab === "screenshot" ? "" : "INTEGRITY"}
+                    </>
+                  )}
+                </span>
+
+                {/* Scanline hover effect */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/20 to-transparent translate-y-[-100%] group-hover:translate-y-[100%] transition-transform duration-1000 ease-in-out" />
+              </Button>
+            </div>
+
           </div>
-
         </div>
       </div>
-    </div>
     </div>
   )
 }
