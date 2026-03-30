@@ -5,7 +5,7 @@ import { LogOut, BarChart3, History, Settings, Users, Shield, Menu } from 'lucid
 import Link from 'next/link'
 import Image from 'next/image'
 import { toast } from 'sonner'
-import { ThemeToggle } from '@/components/shared/theme-toggle'
+
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/components/providers/auth-provider'
 import { useRouter } from 'next/navigation'
@@ -205,9 +205,6 @@ export default function DashboardPage() {
               </Sheet>
             </div>
             <h2 className="text-lg font-semibold tracking-tight">Dashboard Overview</h2>
-          </div>
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
           </div>
         </header>
 

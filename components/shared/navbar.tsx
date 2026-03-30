@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Menu, Shield, Scan, Brain, Siren, Radio, AlertTriangle, Home, PlaySquare } from 'lucide-react'
 import { useAuth } from '@/components/providers/auth-provider'
-import { ThemeToggle } from '@/components/shared/theme-toggle'
 import { LanguageSwitcher } from '@/components/shared/language-switcher'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { Button } from '@/components/ui/button'
@@ -87,7 +86,6 @@ export function Navbar() {
           {/* Right Controls */}
           <div className="flex items-center gap-1.5 xl:gap-3 flex-shrink-0">
             <LanguageSwitcher />
-            <ThemeToggle />
 
             {isLoggedIn ? (
               <Button asChild variant="outline" className="hidden lg:inline-flex rounded-none border-cyan-500/60 text-cyan-400 bg-transparent hover:bg-cyan-900/30 uppercase tracking-widest font-bold text-[10px] h-8 px-3 xl:px-4 whitespace-nowrap">
