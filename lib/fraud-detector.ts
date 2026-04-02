@@ -50,14 +50,14 @@ export async function analyzeFraudRisk(content: string, mediaBase64?: string, me
     cacheFingerprint += `|media_${mediaBase64.length}_${mediaBase64.slice(0, 30)}_${mediaBase64.slice(mid, mid + 30)}_${mediaBase64.slice(-30)}`
   }
   const cacheKey = `fraud_analysis_${Buffer.from(cacheFingerprint).toString('base64').slice(0, 120)}`
-  
+
   // Skip cache when URL verdict is present (live-check results may differ over time)
   if (!urlVerdict) {
     const cachedResult = await cacheGet(cacheKey)
     if (cachedResult) return cachedResult
   }
 
-const systemPrompt = `You are an advanced cybersecurity URL analysis engine designed to detect phishing, scam, and malicious URLs with HIGH accuracy.
+  const systemPrompt = `You are an advanced cybersecurity URL analysis engine designed to detect phishing, scam, and malicious URLs with HIGH accuracy.
 
 Your primary goal is ZERO false negatives (never mark a scam as safe).
 
@@ -202,7 +202,7 @@ You must return a valid JSON object strictly matching the schema structure. Map 
           parts: [{ text: systemPrompt }]
         },
         contents: [
-          { 
+          {
             parts: [
               ...(mediaBase64 && mediaType ? [{
                 inline_data: {
@@ -211,7 +211,7 @@ You must return a valid JSON object strictly matching the schema structure. Map 
                 }
               }] : []),
               { text: `Analyze this content for fraud/scam indicators:\n\n"${content}"\n\nYou MUST return your answer as a valid, raw JSON object exactly matching the schema. No markdown wrapping.` }
-            ] 
+            ]
           }
         ],
         generationConfig: {
@@ -241,12 +241,12 @@ You must return a valid JSON object strictly matching the schema structure. Map 
 
     const data = await response.json()
     let textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}'
-    
+
     // Clean up potential markdown formatting from Gemini
     if (textOutput.startsWith('```')) {
       textOutput = textOutput.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '')
     }
-    
+
     // Parse the JSON safely
     let analysis: FraudAnalysis
     try {
@@ -262,7 +262,7 @@ You must return a valid JSON object strictly matching the schema structure. Map 
     return analysis
   } catch (err: any) {
     console.error('Gemini Native Fetch Error:', err)
-    
+
     // Smooth fallback if Gemini fails, allowing scan UI to still work
     const localScore = calculateLocalRiskScore(content)
     const fallback: FraudAnalysis = {
@@ -323,7 +323,7 @@ export function extractUrlsFromText(text: string): string[] {
   // Matches http://, https://, upi://, custom app schemas, OR naked domains like example.com, example.co.in
   const urlRegex = /((https?|upi|phonepe|gpay|paytm):\/\/[^\s]+)|(\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b(?:\/[^\s]*)?)/gi
   const matches = text.match(urlRegex) || []
-  
+
   // Normalize URLs to have http:// if they are naked domains
   return matches.map(url => {
     url = url.trim()
@@ -338,14 +338,14 @@ export function calculateLocalRiskScore(text: string): number {
   let score = 0
 
   // Check for urgency keywords
-  const urgencyCount = URGENCY_KEYWORDS.filter(keyword => 
+  const urgencyCount = URGENCY_KEYWORDS.filter(keyword =>
     text.toLowerCase().includes(keyword)
   ).length
   score += urgencyCount * 5
 
   // Check for fraud-related keywords
   for (const [category, keywords] of Object.entries(FRAUD_KEYWORDS)) {
-    const matchCount = keywords.filter(keyword => 
+    const matchCount = keywords.filter(keyword =>
       text.toLowerCase().includes(keyword)
     ).length
     score += matchCount * 3

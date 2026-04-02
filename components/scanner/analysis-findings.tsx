@@ -35,37 +35,33 @@ export function AnalysisFindings({
 
       {/* URL Scanner Engine Verdict (Shown if available) */}
       {urlVerdict && (
-        <div className={`border p-6 sm:p-8 relative shadow-sm ${
-          urlVerdict.verdict === 'Legitimate' ? 'bg-[#05110a] border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.05)]' :
-          urlVerdict.verdict === 'Suspicious' ? 'bg-[#141005] border-yellow-500/50 shadow-[0_0_15px_rgba(234,179,8,0.05)]' :
-          'bg-[#1a0505] border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.05)]'
-        }`}>
-          <div className={`absolute top-0 right-0 w-2 h-2 ${
-            urlVerdict.verdict === 'Legitimate' ? 'bg-emerald-500' :
-            urlVerdict.verdict === 'Suspicious' ? 'bg-yellow-500' :
-            'bg-red-500'
-          }`} />
-          <h3 className={`flex items-center gap-3 text-lg sm:text-xl font-bold tracking-[0.1em] uppercase mb-4 border-b pb-3 ${
-            urlVerdict.verdict === 'Legitimate' ? 'text-emerald-400 border-emerald-900/50' :
-            urlVerdict.verdict === 'Suspicious' ? 'text-yellow-400 border-yellow-900/50' :
-            'text-red-400 border-red-900/50'
+        <div className={`border p-6 sm:p-8 relative shadow-sm ${urlVerdict.verdict === 'Legitimate' ? 'bg-[#05110a] border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.05)]' :
+            urlVerdict.verdict === 'Suspicious' ? 'bg-[#141005] border-yellow-500/50 shadow-[0_0_15px_rgba(234,179,8,0.05)]' :
+              'bg-[#1a0505] border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.05)]'
           }`}>
+          <div className={`absolute top-0 right-0 w-2 h-2 ${urlVerdict.verdict === 'Legitimate' ? 'bg-emerald-500' :
+              urlVerdict.verdict === 'Suspicious' ? 'bg-yellow-500' :
+                'bg-red-500'
+            }`} />
+          <h3 className={`flex items-center gap-3 text-lg sm:text-xl font-bold tracking-[0.1em] uppercase mb-4 border-b pb-3 ${urlVerdict.verdict === 'Legitimate' ? 'text-emerald-400 border-emerald-900/50' :
+              urlVerdict.verdict === 'Suspicious' ? 'text-yellow-400 border-yellow-900/50' :
+                'text-red-400 border-red-900/50'
+            }`}>
             <Lightbulb className="h-5 w-5" /> URL Security Engine Analysis
           </h3>
-          
+
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
               <span className="text-gray-400 uppercase text-xs tracking-widest min-w-[120px]">Root Domain:</span>
               <span className="text-gray-200 font-bold bg-black/40 px-3 py-1 rounded border border-gray-800 font-mono tracking-tight">{urlVerdict.domain}</span>
             </div>
-            
+
             <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
               <span className="text-gray-400 uppercase text-xs tracking-widest min-w-[120px]">Verdict:</span>
-              <span className={`font-bold px-3 py-1 rounded text-sm uppercase tracking-wider ${
-                urlVerdict.verdict === 'Legitimate' ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-500/30' :
-                urlVerdict.verdict === 'Suspicious' ? 'bg-yellow-950/40 text-yellow-400 border border-yellow-500/30' :
-                'bg-red-950/40 text-red-400 border border-red-500/30'
-              }`}>
+              <span className={`font-bold px-3 py-1 rounded text-sm uppercase tracking-wider ${urlVerdict.verdict === 'Legitimate' ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-500/30' :
+                  urlVerdict.verdict === 'Suspicious' ? 'bg-yellow-950/40 text-yellow-400 border border-yellow-500/30' :
+                    'bg-red-950/40 text-red-400 border border-red-500/30'
+                }`}>
                 {urlVerdict.verdict} ({urlVerdict.confidence} Confidence)
               </span>
             </div>
