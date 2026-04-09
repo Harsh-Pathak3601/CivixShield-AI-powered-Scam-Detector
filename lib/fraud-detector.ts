@@ -12,6 +12,7 @@ const FraudAnalysisSchema = z.object({
   explanation: z.string().describe('Detailed explanation of findings'),
   red_flags: z.array(z.string()).describe('Specific red flags detected'),
   recommendations: z.array(z.string()).describe('Safety recommendations'),
+  transcript: z.string().describe('Full transcript of the provided audio or media. Return empty string if no speech.')
 })
 
 type FraudAnalysis = z.infer<typeof FraudAnalysisSchema>
@@ -226,9 +227,10 @@ You must return a valid JSON object strictly matching the schema structure. Map 
               confidence: { type: "number", description: "Confidence score from 0-100" },
               explanation: { type: "string" },
               red_flags: { type: "array", items: { type: "string" } },
-              recommendations: { type: "array", items: { type: "string" } }
+              recommendations: { type: "array", items: { type: "string" } },
+              transcript: { type: "string", description: "Transcript of the provided audio. Empty if none." }
             },
-            required: ["risk_score", "risk_level", "scam_patterns", "fraud_types", "confidence", "explanation", "red_flags", "recommendations"]
+            required: ["risk_score", "risk_level", "scam_patterns", "fraud_types", "confidence", "explanation", "red_flags", "recommendations", "transcript"]
           }
         }
       })
@@ -273,7 +275,8 @@ You must return a valid JSON object strictly matching the schema structure. Map 
       confidence: 50,
       explanation: `AI endpoint failed (${err.message}). Showing local heuristic analysis based on keyword scanning.`,
       red_flags: localScore > 0 ? ['Suspicious keywords detected locally'] : [],
-      recommendations: ['Exercise caution', 'Verify the source independently']
+      recommendations: ['Exercise caution', 'Verify the source independently'],
+      transcript: ''
     }
     return fallback
   }

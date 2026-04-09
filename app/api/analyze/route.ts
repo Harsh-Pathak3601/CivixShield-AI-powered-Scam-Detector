@@ -68,6 +68,7 @@ export async function POST(req: NextRequest) {
       explanation: fraudAnalysis.explanation,
       red_flags: fraudAnalysis.red_flags,
       recommendations: fraudAnalysis.recommendations,
+      transcript: fraudAnalysis.transcript,
       urls_found: urls.length,
       unsafe_urls: unsafeUrls.length,
       url_threats: unsafeUrls.flatMap(r => r.threat_types || []),
