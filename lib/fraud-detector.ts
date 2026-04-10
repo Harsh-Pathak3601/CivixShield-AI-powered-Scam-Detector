@@ -37,6 +37,35 @@ const FRAUD_KEYWORDS = {
   'identity_theft': [
     'social security', 'ssn', 'driver license', 'passport', 'date of birth', 'mother maiden name',
     'credit card number', 'cvv', 'pin', 'personal information'
+  ],
+  'ecommerce': [
+    'lucky draw', 'win iphone', 'amazon gift', 'flipkart prize', 
+    'order cancelled refund', 'you won', 'free gift', 'scratch card', 'kbc lottery'
+  ],
+  'utility': [
+    'electricity disconnect', 'power cut', 'pay bill immediately', 
+    'gas connection update', 'mahavitaran', 'bses', 'bescom', 'update electricity bill'
+  ],
+  'telecom': [
+    '5g upgrade', 'sim blocked', 'airtel kyc', 'jio free recharge', 
+    'vi lucky draw', 'vodafone kyc', 'bsnl upgrade', 'sim verification pending'
+  ],
+  'jobs': [
+    'part time job', 'work from home', 'youtube like', 'telegram task', 
+    'daily income', 'complete task', 'earn daily', 'wfh', 'salary credited'
+  ],
+  'government': [
+    'income tax refund', 'pm yojana', 'subsidy approved', 'challan payment', 
+    'free laptop scheme', 'pm kisan', 'free ration'
+  ],
+  'media_gaming': [
+    'netflix free', 'hotstar vip free', 'subscription expired', 'prime video gift',
+    'blue badge', 'instagram verified', 'facebook locked', 'whatsapp gold',
+    'free uc', 'free diamonds', 'bgmi hack', 'win cash daily', 'aviator tricks'
+  ],
+  'travel_food': [
+    'irctc refund', 'flight cancelled', 'cheap tickets', 'makemytrip offer',
+    'swiggy offer', 'zomato refund', 'free meal', 'dominos free'
   ]
 }
 

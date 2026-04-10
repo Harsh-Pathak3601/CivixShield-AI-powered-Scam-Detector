@@ -33,6 +33,13 @@
 
 **CivixShield** is a full-stack, AI-powered cybersecurity platform designed to protect everyday citizens from online scams, phishing attacks, deepfakes, and social engineering threats. It democratizes access to enterprise-grade threat detection technology through an intuitive, dark-themed web interface.
 
+### The CivixShield Ecosystem
+
+CivixShield is a comprehensive, multi-platform suite comprising three core interconnected projects:
+1. **CivixShieldWeb**: A Next.js web application functioning as the central AI-powered fraud detection platform and dashboard.
+2. **CivixLauncher**: A native Android Kotlin background sentinel that monitors notifications, clipboard, and phone calls in real-time.
+3. **CivixShieldApp**: A React Native/Expo mobile application serving as the primary device interface, ingesting real-time threat data from the Launcher via deep links.
+
 ### Core Value Proposition
 
 | Problem | CivixShield Solution |
