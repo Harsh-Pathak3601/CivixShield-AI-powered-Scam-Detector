@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       urls.map(url => checkSafeBrowsingUrl(url))
     )
 
-    // Determine if any URLs are unsafe
+    // Determine if any URLs are unsafe via Google Safe Browsing
     const unsafeUrls = urlCheckResults.filter(result => !result.safe)
     const hasUnsafeUrl = unsafeUrls.length > 0
 
@@ -35,21 +35,21 @@ export async function POST(req: NextRequest) {
     let finalRiskScore = fraudAnalysis.risk_score
 
     // Safety Net: Enforce minimum risk floors based on strict heuristic URL results
-    // The upgraded AI model handles this naturally, but this protects the system 
-    // if the AI API fails over to offline-fallback mode.
     if (urlVerdict) {
       if (urlVerdict.verdict === 'Phishing') {
-        finalRiskScore = Math.max(finalRiskScore, 85) // Ensure High/Critical bucket
+        finalRiskScore = Math.max(finalRiskScore, 85)
         if (!urlVerdict.is_live && !fraudAnalysis.red_flags.includes('Domain does not exist or is fully offline')) {
           fraudAnalysis.red_flags.unshift('Domain does not exist or is fully offline')
         }
       } else if (urlVerdict.verdict === 'Suspicious') {
-        finalRiskScore = Math.max(finalRiskScore, 40) // Ensure Medium bucket
+        finalRiskScore = Math.max(finalRiskScore, 40)
       }
     }
 
     if (hasUnsafeUrl) {
-      finalRiskScore = Math.min(100, finalRiskScore + 50) // Google Safe Browsing flag is critical
+      finalRiskScore = Math.min(100, finalRiskScore + 50)
+      const threatTypes = Array.from(new Set(unsafeUrls.flatMap(r => r.threat_types || []))).join(', ')
+      fraudAnalysis.red_flags.unshift(`GOOGLE SAFE BROWSING ALERT: Flagged as ${threatTypes || 'MALICIOUS'}`)
     }
 
     // Determine risk level based on adjusted score
@@ -72,7 +72,8 @@ export async function POST(req: NextRequest) {
       urls_found: urls.length,
       unsafe_urls: unsafeUrls.length,
       url_threats: unsafeUrls.flatMap(r => r.threat_types || []),
-      url_verdict: urlVerdict || null
+      url_verdict: urlVerdict || null,
+      safe_browsing_result: hasUnsafeUrl ? 'MALICIOUS' : 'SAFE'
     }
 
     // Save to database regardless of login status
